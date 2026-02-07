@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MFW FREE Tools</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: white;
+    }
+
+    header {
+      padding: 20px;
+      text-align: left;
+    }
+
+    header h1 {
+      color: lime;
+      font-size: 30px;
+      margin: 0;
+    }
+
+    header p {
+      margin: 5px 0;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .card {
+      background: #111;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,255,0,0.2);
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 18px;
+      color: lime;
+    }
+
+    .card p {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-top: 5px;
+    }
+
+    .toggle-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .status {
+      font-size: 14px;
+      font-weight: bold;
+      color: red;
+    }
+
+    .switch {
+      position: relative;
+      width: 50px;
+      height: 25px;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      background: gray;
+      border-radius: 25px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: 0.3s;
+    }
+
+    .slider:before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      bottom: 2.5px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    input:checked + .slider {
+      background: lime;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+
+    /* ========================= */
+    /* CROSSHAIR UI STYLE */
+    /* ========================= */
+
+    #crosshairPage {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .crosshair-box {
+      margin: 30px auto;
+      width: 250px;
+      height: 250px;
+      border: 2px solid lime;
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,255,0,0.4);
+    }
+
+    .crosshair-line {
+      position: absolute;
+      background: lime;
+    }
+
+    .vertical {
+      width: 4px;
+      height: 120px;
+      top: 65px;
+      left: 123px;
+    }
+
+    .horizontal {
+      height: 4px;
+      width: 120px;
+      top: 123px;
+      left: 65px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      top: 120px;
+      left: 120px;
+    }
+
+    .slider-setting {
+      width: 80%;
+      margin: 15px auto;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+
+    footer button {
+      background: none;
+      border: none;
+      color: lime;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <p>TOOLS UPDATE</p>
+    <h1>MFW FREE</h1>
+  </header>
+
+  <!-- ========================= -->
+  <!-- MAIN PAGE (TOOLS) -->
+  <!-- ========================= -->
+  <div id="mainPage">
+    <div id="tools"></div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- CROSSHAIR PAGE -->
+  <!-- ========================= -->
+  <div id="crosshairPage">
+    <h2 style="color:lime;">🎯 Crosshair Optimizer</h2>
+    <p style="opacity:0.7;">
+      Atur tampilan crosshair latihan (UI Only)
+    </p>
+
+    <!-- CROSSHAIR DISPLAY -->
+    <div class="crosshair-box">
+      <div class="crosshair-line vertical" id="vLine"></div>
+      <div class="crosshair-line horizontal" id="hLine"></div>
+      <div class="dot" id="dot"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="card slider-setting">
+      <h2>Crosshair Size</h2>
+      <input type="range" min="50" max="180" value="120"
+        onchange="changeSize(this.value)">
+    </div>
+
+    <div class="card slider-setting">
+      <h2>Dot ON/OFF</h2>
+      <label class="switch">
+        <input type="checkbox" checked onchange="toggleDot(this)">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <p style="font-size:13px;opacity:0.6;">
+      *Ini hanya UI edukasi, bukan cheat game.
+    </p>
+  </div>
+
+  <!-- ========================= -->
+  <!-- FOOTER MENU -->
+  <!-- ========================= -->
+  <footer>
+    <button onclick="showPage('menu')">🏠 Menu</button>
+    <button onclick="showPage('crosshair')">🎯 Crosshair</button>
+    <button>🤖 Sense AI</button>
+    <button>⚙ Settings</button>
+  </footer>
+
+  <!-- ========================= -->
+  <!-- JAVASCRIPT -->
+  <!-- ========================= -->
+  <script>
+    /* TOOLS PAGE DATA */
+    const toolsData = [
+      {
+        name: "AIM-RELATED",
+        desc: "Untuk meningkatkan akurasi tembakan dan stabilitas senjata."
+      },
+      {
+        name: "Touch Optimizer",
+        desc: "Mengoptimalkan respon sentuhan layar agar lebih cepat."
+      },
+      {
+        name: "FPS Booster",
+        desc: "Meningkatkan performa grafis agar lebih smooth dan bebas lag."
+      },
+      {
+        name: "ROG Monitoring",
+        desc: "Menampilkan info real-time CPU, GPU, FPS dan RAM."
+      },
+      {
+        name: "CPU Optimizer",
+        desc: "Mengurangi beban CPU untuk performa lebih stabil."
+      },
+      {
+        name: "Aim Assisted",
+        desc: "Simulasi mode latihan untuk kontrol recoil lebih baik."
+      }
+    ];
+
+    const toolsContainer = document.getElementById("tools");
+
+    toolsData.forEach((tool, index) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <h2>${tool.name} <span style="font-size:12px;">FREE</span></h2>
+        <p>${tool.desc}</p>
+
+        <div class="toggle-container">
+          <span class="status" id="status-${index}">OFF</span>
+
+          <label class="switch">
+            <input type="checkbox" onchange="toggleTool(${index})">
+            <span class="slider"></span>
+          </label>
+        </div>
+      `;
+
+      toolsContainer.appendChild(card);
+    });
+
+    function toggleTool(index) {
+      const status = document.getElementById("status-" + index);
+
+      if (status.innerText === "OFF") {
+        status.innerText = "ON";
+        status.style.color = "lime";
+      } else {
+        status.innerText = "OFF";
+        status.style.color = "red";
+      }
+    }
+
+    /* ========================= */
+    /* PAGE SWITCH SYSTEM */
+    /* ========================= */
+
+    function showPage(page) {
+      document.getElementById("mainPage").style.display = "none";
+      document.getElementById("crosshairPage").style.display = "none";
+
+      if (page === "menu") {
+        document.getElementById("mainPage").style.display = "block";
+      }
+
+      if (page === "crosshair") {
+        document.getElementById("crosshairPage").style.display = "block";
+      }
+    }
+
+    /* ========================= */
+    /* CROSSHAIR SETTINGS */
+    /* ========================= */
+
+    function changeSize(value) {
+      document.getElementById("vLine").style.height = value + "px";
+      document.getElementById("hLine").style.width = value + "px";
+    }
+
+    function toggleDot(toggle) {
+      const dot = document.getElementById("dot");
+      dot.style.display = toggle.checked ? "block" : "none";
+    }
+  </script>
+
+</body>
+</html>
